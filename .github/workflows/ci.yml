@@ -1,0 +1,83 @@
+name: BrewLite CI Pipeline (Install -> Lint -> Test -> Build)
+
+# ========================================================
+# Author: TV1 (Tech Lead / DevOps)
+# Task 4.4 (I-15) & Task 5.2 (I-28)
+# ========================================================
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    name: Continuous Integration & Verification
+    runs-on: ubuntu-latest
+
+    # Service container for real database integration testing (NFR-07, I-28)
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: brewlite_test_user
+          POSTGRES_PASSWORD: brewlite_test_password
+          POSTGRES_DB: brewlite_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: 1. Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js 20 LTS environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 3. Install dependencies cleanly (Clean Install)
+        run: npm ci
+
+      - name: 4. Check Linting & Formatting rules
+        run: |
+          echo "Running ESLint across api and web workspaces..."
+          npm run lint --if-present
+
+      - name: 5. Execute Automated Unit Tests
+        env:
+          JWT_SECRET: test_secret_key_32_characters_long_for_ci
+        run: |
+          echo "Running unit tests..."
+          npm test
+
+      - name: 6. Execute Integration Tests with Real PostgreSQL Service
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: brewlite_test_user
+          DB_PASSWORD: brewlite_test_password
+          DB_NAME: brewlite_test_db
+          DATABASE_URL: postgresql://brewlite_test_user:brewlite_test_password@localhost:5432/brewlite_test_db
+          JWT_SECRET: test_secret_key_32_characters_long_for_ci
+        run: |
+          echo "Running integration tests..."
+          npm run test:integration --if-present
+
+      - name: 7. Execute End-to-End (E2E) Test Suite
+        run: |
+          echo "Running E2E tests..."
+          npm run test:e2e --if-present
+
+      - name: 8. Build production artifacts (Build Gate)
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+        run: |
+          echo "Building NestJS API and Next.js Web..."
+          npm run build

@@ -1,0 +1,88 @@
+version: '3.8'
+
+# ========================================================
+# BrewLite Monorepo Local Environment (Task 5.2 - I-28)
+# Author: TV1 (Tech Lead / DevOps)
+# Usage: docker compose up --build
+# ========================================================
+
+services:
+  # 1. PostgreSQL Database Service
+  db:
+    image: postgres:16-alpine
+    container_name: brewlite_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-brewlite_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-brewlite_secure_password}
+      POSTGRES_DB: ${DB_NAME:-brewlite_db}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - brewlite_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-brewlite_user} -d ${DB_NAME:-brewlite_db}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - brewlite_net
+
+  # 2. NestJS Backend API Service
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: brewlite_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      API_PORT: 3001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-brewlite_user}
+      DB_PASSWORD: ${DB_PASSWORD:-brewlite_secure_password}
+      DB_NAME: ${DB_NAME:-brewlite_db}
+      DATABASE_URL: postgresql://${DB_USER:-brewlite_user}:${DB_PASSWORD:-brewlite_secure_password}@db:5432/${DB_NAME:-brewlite_db}
+      JWT_SECRET: ${JWT_SECRET:-brewlite_super_secret_jwt_key_sample_change_in_production}
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - '3001:3001'
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3001/api/v1/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - brewlite_net
+
+  # 3. Next.js Mobile-First Web / PWA Service
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: brewlite_web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+    ports:
+      - '3000:3000'
+    networks:
+      - brewlite_net
+
+volumes:
+  brewlite_pgdata:
+    driver: local
+
+networks:
+  brewlite_net:
+    driver: bridge
