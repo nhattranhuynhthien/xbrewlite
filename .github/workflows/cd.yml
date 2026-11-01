@@ -26,8 +26,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm ci
+      - run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
       - run: npm run lint --if-present
       - run: npm test
 
@@ -132,3 +136,4 @@ jobs:
           echo "===================================================="
           # Trigger rollback webhook / revert image tag to previous stable tag
           echo "Rollback command executed successfully."
+

@@ -40,10 +40,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: 3. Install dependencies cleanly (Clean Install)
-        run: npm ci
+      - name: 3. Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: 4. Check Linting & Formatting rules
         run: |
@@ -81,3 +85,4 @@ jobs:
         run: |
           echo "Building NestJS API and Next.js Web..."
           npm run build
+
