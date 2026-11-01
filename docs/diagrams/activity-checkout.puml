@@ -1,0 +1,110 @@
+@startuml activity-checkout
+' BrewLite - End-to-End Activity Diagram with Swimlanes
+' Author: TV5 (Frontend - Menu & Cart)
+' Reviewer: TV6 (Frontend - Checkout & Orders)
+' Task 2.1: D-10 (Refs #10)
+
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundcorner 8
+skinparam shadowing false
+
+|#EFF6FF|Khách hàng (Customer)|
+|#F0FDF4|Next.js Frontend (PWA)|
+|#FEF3C7|NestJS Backend (API)|
+|#FDF2F8|Payment Mock Service|
+
+|Khách hàng (Customer)|
+start
+:Duyệt Menu món & Xem chi tiết;
+:Chọn Size (S/M/L) & Topping;
+:Bấm "Thêm vào giỏ hàng";
+
+|Next.js Frontend (PWA)|
+:Cập nhật State giỏ hàng & Lưu localStorage;
+:Hiển thị Mini Cart badge;
+
+|Khách hàng (Customer)|
+:Mở giỏ hàng & Bấm "Tiến hành Đặt hàng";
+
+|Next.js Frontend (PWA)|
+if (Người dùng đã đăng nhập?) then (Chưa đăng nhập)
+  :Lưu redirect URL "/checkout";
+  :Điều hướng sang Màn hình Đăng nhập;
+  |Khách hàng (Customer)|
+  :Nhập Email & Mật khẩu;
+  |Next.js Frontend (PWA)|
+  :Gọi POST /api/v1/auth/login;
+  |NestJS Backend (API)|
+  :Xác thực mật khẩu & Cấp JWT;
+  |Next.js Frontend (PWA)|
+  :Lưu JWT token & Điều hướng lại "/checkout";
+else (Đã đăng nhập)
+endif
+
+|Khách hàng (Customer)|
+:Kiểm tra lại giỏ hàng & Chọn phương thức (Ví/Thẻ);
+:Bấm "Xác nhận đặt hàng & Thanh toán";
+
+|Next.js Frontend (PWA)|
+:Gửi POST /api/v1/orders (kèm Bearer Token);
+
+|NestJS Backend (API)|
+:Kiểm tra JWT qua JwtAuthGuard;
+:Mở Database Transaction;
+:Kiểm tra tồn kho từng món (stock >= quantity);
+
+if (Tất cả món còn đủ hàng?) then (Hết hàng / Thiếu hàng)
+  :Rollback Transaction;
+  :Trả về HTTP 400 Bad Request;
+  |Next.js Frontend (PWA)|
+  :Hiển thị thông báo "Sản phẩm đã hết hàng";
+  |Khách hàng (Customer)|
+  :Điều chỉnh lại giỏ hàng;
+  detach
+else (Đủ hàng)
+  :Tính lại đơn giá chuẩn Server;
+  :Trừ tồn kho (stock = stock - qty);
+  :Tạo bản ghi Order (PENDING_PAYMENT) & OrderItem;
+  :Commit Transaction;
+  :Trả về HTTP 201 Created (kèm orderId, totalAmount);
+endif
+
+|Next.js Frontend (PWA)|
+:Tạo Idempotency-Key (UUIDv4);
+:Gửi POST /api/v1/payments (orderId, method, Idempotency-Key);
+
+|NestJS Backend (API)|
+if (Idempotency-Key đã tồn tại trong DB?) then (Đã tồn tại)
+  :Trả về kết quả thanh toán đã lưu (HTTP 200 OK);
+else (Chưa tồn tại)
+  :Gọi Payment Mock Service;
+  |Payment Mock Service|
+  :Xác thực tài khoản & Xử lý trừ tiền mô phỏng;
+  if (Thanh toán hợp lệ?) then (Thành công)
+    :Trả về { status: "SUCCESS", txNo: "TXN_..." };
+    |NestJS Backend (API)|
+    :Tạo bản ghi Payment (SUCCESS);
+    :Cập nhật Order.status = "PAID";
+    :Trả về HTTP 200 OK;
+    |Next.js Frontend (PWA)|
+    :Làm rỗng giỏ hàng (clearCart);
+    :Điều hướng sang Màn hình Theo dõi đơn hàng;
+    |Khách hàng (Customer)|
+    :Xem mã đơn & Trạng thái đơn "Đã thanh toán";
+    stop
+  else (Thất bại)
+    :Trả về { status: "FAILED", message: "Số dư không đủ" };
+    |NestJS Backend (API)|
+    :Tạo bản ghi Payment (FAILED);
+    :Đơn hàng giữ nguyên PENDING_PAYMENT;
+    :Trả về HTTP 400 Bad Request;
+    |Next.js Frontend (PWA)|
+    :Hiển thị lỗi thanh toán & Hiện nút "Thử lại";
+    |Khách hàng (Customer)|
+    :Chọn phương thức khác hoặc Thử lại thanh toán;
+    detach
+  endif
+endif
+
+@enduml

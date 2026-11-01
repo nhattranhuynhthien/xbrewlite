@@ -1,0 +1,159 @@
+@startuml class-domain
+' BrewLite - Domain Class Diagram
+' Author: TV3 (Đỗ Hoàng Vinh - Backend Catalog)
+' Reviewer: TV4 (Nguyễn Văn Tài - Backend Order & Payment)
+' Task 2.3: D-12 (Refs #11)
+
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam classAttributeIconSize 0
+skinparam roundcorner 6
+skinparam shadowing false
+
+enum UserRole {
+  CUSTOMER
+  STAFF
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  E-WALLET
+  CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum ProductCategory {
+  COFFEE
+  TEA
+  SIGNATURE
+}
+
+class User {
+  + id : UUID
+  + email : String
+  + passwordHash : String
+  + fullName : String
+  + phone : String
+  + role : UserRole
+  + loyaltyPoints : Integer
+  + createdAt : DateTime
+  + updatedAt : DateTime
+  + verifyPassword(plain : String) : Boolean
+}
+
+class Product {
+  + id : UUID
+  + name : String
+  + category : ProductCategory
+  + basePrice : Decimal
+  + imageUrl : String
+  + description : String
+  + isAvailable : Boolean
+  + stock : Integer
+  + createdAt : DateTime
+  + checkAvailability(qty : Integer) : Boolean
+}
+
+class Size {
+  + id : UUID
+  + productId : UUID
+  + code : String
+  + name : String
+  + extraPrice : Decimal
+}
+
+class Topping {
+  + id : UUID
+  + name : String
+  + price : Decimal
+  + isAvailable : Boolean
+}
+
+class Order {
+  + id : UUID
+  + orderCode : String
+  + userId : UUID
+  + totalAmount : Decimal
+  + status : OrderStatus
+  + note : String
+  + createdAt : DateTime
+  + updatedAt : DateTime
+  + canTransitionTo(newStatus : OrderStatus) : Boolean
+}
+
+class OrderItem {
+  + id : UUID
+  + orderId : UUID
+  + productId : UUID
+  + productName : String
+  + sizeCode : String
+  + unitPrice : Decimal
+  + quantity : Integer
+  + subtotal : Decimal
+}
+
+class OrderItemTopping {
+  + id : UUID
+  + orderItemId : UUID
+  + toppingId : UUID
+  + toppingName : String
+  + price : Decimal
+}
+
+class Payment {
+  + id : UUID
+  + orderId : UUID
+  + amount : Decimal
+  + method : PaymentMethod
+  + status : PaymentStatus
+  + idempotencyKey : String
+  + transactionCode : String
+  + failureReason : String
+  + createdAt : DateTime
+}
+
+class Promotion {
+  + id : UUID
+  + code : String
+  + discountPercent : Integer
+  + maxDiscountAmount : Decimal
+  + minOrderAmount : Decimal
+  + isActive : Boolean
+  + expiresAt : DateTime
+  + calculateDiscount(orderTotal : Decimal) : Decimal
+}
+
+class LoyaltyTransaction {
+  + id : UUID
+  + userId : UUID
+  + orderId : UUID
+  + pointsChanged : Integer
+  + type : String
+  + createdAt : DateTime
+}
+
+' Relationships & Multiplicities
+User "1" --> "0..*" Order : places
+User "1" --> "0..*" LoyaltyTransaction : earns
+Order "1" *-- "1..*" OrderItem : contains
+OrderItem "1" *-- "0..*" OrderItemTopping : includes
+Product "1" *-- "1..*" Size : has
+Product "0..*" o-- "0..*" Topping : customizable with
+Order "1" --> "0..*" Payment : settled by
+Order "0..1" --> "0..1" Promotion : applies
+Order "1" --> "0..1" LoyaltyTransaction : generates
+
+@enduml

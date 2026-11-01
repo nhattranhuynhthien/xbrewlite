@@ -1,0 +1,98 @@
+@startuml sequence-checkout
+' BrewLite - Detailed Sequence Diagram for Checkout & Payment
+' Author: TV4 (Backend - Order & Payment)
+' Reviewer: TV1 (Tech Lead / DevOps)
+' Task 2.2: D-11 (Refs #9)
+
+autonumber
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam responseMessageBelowArrow true
+
+actor "Customer\n(Khách hàng)" as Customer #EFF6FF
+participant "Next.js UI\n(apps/web)" as Web #F0FDF4
+participant "NestJS API\n(apps/api)" as API #FEF3C7
+database "PostgreSQL DB\n(Database)" as DB #EFF6FF
+participant "Payment Service\n(Mock Gateway)" as PayGW #FDF2F8
+
+== 1. Khởi tạo Đơn hàng trong Transaction ==
+
+Customer -> Web : Bấm "Xác nhận đặt hàng & Thanh toán"
+activate Web
+
+Web -> API : POST /api/v1/orders\nHeaders: Authorization Bearer <JWT>\nBody: { items: [...], customerInfo: {...} }
+activate API
+
+API -> API : JwtAuthGuard: Verify JWT & extract userId
+alt Token không hợp lệ hoặc hết hạn
+  API --> Web : 401 Unauthorized { message: "Invalid or expired token" }
+  Web --> Customer : Chuyển hướng sang màn hình Đăng nhập (/login)
+end
+
+API -> DB : QueryRunner.startTransaction()\nIsolation Level: READ COMMITTED
+activate DB
+
+loop Duyệt từng item trong giỏ hàng
+  API -> DB : SELECT * FROM products WHERE id = :id FOR UPDATE
+  DB --> API : Trả về thông tin sản phẩm và stock hiện tại
+  alt Tồn kho không đủ (stock < item.quantity)
+    API -> DB : QueryRunner.rollbackTransaction()
+    API --> Web : 400 Bad Request { message: "Sản phẩm đã hết hàng" }
+    Web --> Customer : Hiển thị cảnh báo hết hàng, yêu cầu sửa giỏ
+  end
+  API -> API : Tính đơn giá chuẩn Server (basePrice + sizePrice + toppings)
+  API -> DB : UPDATE products SET stock = stock - :qty WHERE id = :id
+end
+
+API -> DB : INSERT INTO orders (userId, totalAmount, status='PENDING_PAYMENT')
+API -> DB : INSERT INTO order_items & order_item_toppings (...)
+API -> DB : QueryRunner.commitTransaction()
+DB --> API : Transaction Committed thành công
+deactivate DB
+
+API --> Web : 201 Created { orderId: "ORD-001", totalAmount: 85000, status: "PENDING_PAYMENT" }
+deactivate API
+
+== 2. Xử lý Thanh toán kèm Idempotency-Key ==
+
+Web -> Web : Sinh UUIDv4 ngẫu nhiên làm Idempotency-Key\n(VD: "550e8400-e29b-41d4-a716-446655440000")
+
+Web -> API : POST /api/v1/payments\nHeaders: Idempotency-Key: <UUID>, Bearer <JWT>\nBody: { orderId: "ORD-001", method: "E-WALLET", amount: 85000 }
+activate API
+
+API -> DB : SELECT * FROM payments WHERE idempotency_key = :key
+activate DB
+DB --> API : Trả về kết quả tìm kiếm (null nếu là request lần đầu)
+deactivate DB
+
+alt Yêu cầu gửi lại cùng Idempotency-Key (Retry / Network Duplicate)
+  API --> Web : 200 OK (Trả về kết quả giao dịch đã lưu trước đó)
+  Web --> Customer : Không trừ tiền lần 2, tiếp tục hiển thị đơn đã thanh toán
+else Request mới (Lần đầu xử lý)
+  API -> PayGW : POST /mock/charge { orderId, amount, method }
+  activate PayGW
+  PayGW -> PayGW : Xác thực tài khoản & Giả lập thanh toán
+  
+  alt Thanh toán Thành công
+    PayGW --> API : 200 OK { status: "SUCCESS", transactionNo: "TXN_987654" }
+    deactivate PayGW
+    API -> DB : INSERT INTO payments (orderId, amount, method, status='SUCCESS', idempotencyKey)
+    API -> DB : UPDATE orders SET status = 'PAID' WHERE id = :orderId
+    API --> Web : 200 OK { success: true, paymentStatus: "SUCCESS", orderStatus: "PAID" }
+    
+    Web -> Web : Dọn sạch giỏ hàng: clearCart()
+    Web --> Customer : Chuyển sang màn hình Xác nhận & Theo dõi đơn hàng
+  else Thanh toán Thất bại (Số dư ví không đủ / Thẻ lỗi)
+    PayGW --> API : 400 Bad Request { status: "FAILED", message: "Số dư không đủ" }
+    API -> DB : INSERT INTO payments (orderId, amount, method, status='FAILED', idempotencyKey)
+    API --> Web : 400 Bad Request { success: false, paymentStatus: "FAILED", message: "Số dư không đủ" }
+    Web --> Customer : Báo lỗi thanh toán & Kích hoạt nút "Thử lại thanh toán"
+  end
+end
+
+deactivate API
+deactivate Web
+
+@enduml

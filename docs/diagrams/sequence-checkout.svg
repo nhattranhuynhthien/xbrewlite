@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 960" width="100%" height="100%" style="background:#ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="seqShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12" />
+    </filter>
+    <marker id="seqArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#1E3A8A" />
+    </marker>
+    <marker id="seqArrDash" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#4B5563" />
+    </marker>
+    <marker id="seqErrArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#DC2626" />
+    </marker>
+    <marker id="seqSuccessArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#16A34A" />
+    </marker>
+  </defs>
+
+  <!-- Title Header -->
+  <rect x="20" y="15" width="980" height="42" rx="8" fill="#1E293B" />
+  <text x="510" y="42" fill="#FFFFFF" font-size="16" font-weight="bold" text-anchor="middle">SEQUENCE DIAGRAM: CHECKOUT, TRANSACTION &amp; IDEMPOTENT PAYMENT (Task 2.2 - I-09)</text>
+
+  <!-- Lifeline Columns Positions: 
+       Customer: 110, Web: 310, API: 510, DB: 710, PayGW: 910 -->
+
+  <!-- Lifeline Headers -->
+  <rect x="40" y="70" width="140" height="36" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5" />
+  <text x="110" y="86" font-size="11" font-weight="bold" fill="#1E3A8A" text-anchor="middle">Customer</text>
+  <text x="110" y="99" font-size="9.5" fill="#2563EB" text-anchor="middle">(Khách hàng)</text>
+
+  <rect x="240" y="70" width="140" height="36" rx="6" fill="#F0FDF4" stroke="#10B981" stroke-width="1.5" />
+  <text x="310" y="86" font-size="11" font-weight="bold" fill="#065F46" text-anchor="middle">Next.js UI</text>
+  <text x="310" y="99" font-size="9.5" fill="#047857" text-anchor="middle">(apps/web PWA)</text>
+
+  <rect x="440" y="70" width="140" height="36" rx="6" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="510" y="86" font-size="11" font-weight="bold" fill="#92400E" text-anchor="middle">NestJS API</text>
+  <text x="510" y="99" font-size="9.5" fill="#B45309" text-anchor="middle">(apps/api)</text>
+
+  <rect x="640" y="70" width="140" height="36" rx="6" fill="#EFF6FF" stroke="#6366F1" stroke-width="1.5" />
+  <text x="710" y="86" font-size="11" font-weight="bold" fill="#3730A3" text-anchor="middle">PostgreSQL DB</text>
+  <text x="710" y="99" font-size="9.5" fill="#4F46E5" text-anchor="middle">(Database ACID)</text>
+
+  <rect x="840" y="70" width="140" height="36" rx="6" fill="#FDF2F8" stroke="#EC4899" stroke-width="1.5" />
+  <text x="910" y="86" font-size="11" font-weight="bold" fill="#9D174D" text-anchor="middle">Payment Service</text>
+  <text x="910" y="99" font-size="9.5" fill="#BE185D" text-anchor="middle">(Mock Gateway)</text>
+
+  <!-- Lifeline Dashed Lines -->
+  <line x1="110" y1="106" x2="110" y2="920" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="4,4" />
+  <line x1="310" y1="106" x2="310" y2="920" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="4,4" />
+  <line x1="510" y1="106" x2="510" y2="920" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="4,4" />
+  <line x1="710" y1="106" x2="710" y2="920" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="4,4" />
+  <line x1="910" y1="106" x2="910" y2="920" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="4,4" />
+
+  <!-- Stage 1 Separator -->
+  <rect x="30" y="125" width="960" height="22" rx="4" fill="#DBEAFE" />
+  <text x="40" y="140" font-size="10.5" font-weight="bold" fill="#1E40AF">1. Khởi tạo Đơn hàng trong PostgreSQL Transaction (Atomic Order Creation)</text>
+
+  <!-- Step 1: Customer clicks checkout -->
+  <path d="M 110 165 L 305 165" stroke="#1E3A8A" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="207" y="160" font-size="10" fill="#1E3A8A" text-anchor="middle">1. Bấm "Xác nhận đặt hàng &amp; Thanh toán"</text>
+
+  <!-- Step 2: Web calls POST /orders -->
+  <path d="M 310 185 L 505 185" stroke="#1E3A8A" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="410" y="177" font-size="9.5" fill="#1E3A8A" text-anchor="middle">2. POST /api/v1/orders (Bearer JWT, items, customerInfo)</text>
+
+  <!-- Step 3: Self-verify JWT -->
+  <path d="M 510 195 C 545 195, 545 210, 510 210" fill="none" stroke="#6366F1" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="555" y="205" font-size="9" fill="#4338CA">Verify JWT &amp; Extract userId</text>
+
+  <!-- Step 4: Start Transaction -->
+  <path d="M 510 230 L 705 230" stroke="#4F46E5" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="224" font-size="9.5" fill="#3730A3" text-anchor="middle">3. QueryRunner.startTransaction() [READ COMMITTED]</text>
+
+  <!-- Step 5: Check stock & price -->
+  <path d="M 510 250 L 705 250" stroke="#4F46E5" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="244" font-size="9.5" fill="#3730A3" text-anchor="middle">4. SELECT * FROM products WHERE id IN (...) FOR UPDATE</text>
+
+  <path d="M 710 268 L 515 268" stroke="#4B5563" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#seqArrDash)" />
+  <text x="610" y="264" font-size="9" fill="#4B5563" text-anchor="middle">Trả về thông tin tồn kho &amp; giá cơ bản</text>
+
+  <!-- Step 6: Decrement stock & insert order -->
+  <path d="M 510 290 L 705 290" stroke="#4F46E5" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="284" font-size="9" fill="#3730A3" text-anchor="middle">5. UPDATE products (stock = stock - qty) &amp; INSERT orders, order_items</text>
+
+  <!-- Step 7: Commit -->
+  <path d="M 510 310 L 705 310" stroke="#16A34A" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="304" font-size="9" fill="#15803D" text-anchor="middle">6. QueryRunner.commitTransaction()</text>
+
+  <!-- Step 8: Return 201 Created -->
+  <path d="M 510 330 L 315 330" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#seqSuccessArr)" />
+  <text x="410" y="324" font-size="9.5" fill="#15803D" text-anchor="middle">7. 201 Created { orderId: "ORD-001", total: 85000, status: "PENDING_PAYMENT" }</text>
+
+  <!-- Stage 2 Separator -->
+  <rect x="30" y="360" width="960" height="22" rx="4" fill="#FEF3C7" />
+  <text x="40" y="375" font-size="10.5" font-weight="bold" fill="#92400E">2. Xử lý Thanh toán (Ví / Thẻ) &amp; Cơ chế Chống Trừ Tiền Trùng (Idempotency-Key)</text>
+
+  <!-- Step 9: Web generates Idempotency-Key -->
+  <path d="M 310 395 C 345 395, 345 410, 310 410" fill="none" stroke="#10B981" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="355" y="405" font-size="9" fill="#047857">Generate UUID Idempotency-Key (v4)</text>
+
+  <!-- Step 10: Call POST /payments -->
+  <path d="M 310 430 L 505 430" stroke="#1E3A8A" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="410" y="423" font-size="9.5" fill="#1E3A8A" text-anchor="middle">8. POST /api/v1/payments (Idempotency-Key: UUID, orderId, method, amount)</text>
+
+  <!-- Step 11: Check Idempotency key in DB -->
+  <path d="M 510 450 L 705 450" stroke="#4F46E5" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="444" font-size="9" fill="#3730A3" text-anchor="middle">9. SELECT * FROM payments WHERE idempotency_key = :key</text>
+
+  <!-- Alt Block 1: Idempotency Key exists (Duplicate Request) -->
+  <rect x="230" y="465" width="760" height="55" rx="6" fill="#F8FAFC" stroke="#94A3B8" stroke-dasharray="4,4" />
+  <rect x="230" y="465" width="220" height="18" fill="#94A3B8" />
+  <text x="340" y="478" font-size="9" font-weight="bold" fill="#FFFFFF" text-anchor="middle">[alt] Nếu Idempotency-Key đã xử lý trước đó</text>
+
+  <path d="M 510 500 L 315 500" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#seqSuccessArr)" />
+  <text x="410" y="495" font-size="9" fill="#15803D" text-anchor="middle">10. 200 OK (Trả về kết quả giao dịch cũ - Không trừ tiền lần 2)</text>
+
+  <!-- Alt Block 2: Brand new payment request -->
+  <rect x="230" y="530" width="760" height="370" rx="6" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.5" />
+  <rect x="230" y="530" width="220" height="18" fill="#3B82F6" />
+  <text x="340" y="543" font-size="9" font-weight="bold" fill="#FFFFFF" text-anchor="middle">[alt] Request thanh toán mới</text>
+
+  <!-- Call Payment Mock -->
+  <path d="M 510 565 L 905 565" stroke="#EC4899" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="710" y="559" font-size="9.5" fill="#9D174D" text-anchor="middle">11. POST /mock/charge { orderId, amount, method }</text>
+
+  <!-- Branch SUCCESS inside Alt -->
+  <rect x="250" y="585" width="720" height="150" rx="4" fill="#F0FDF4" stroke="#86EFAC" />
+  <text x="260" y="602" font-size="9.5" font-weight="bold" fill="#15803D">[Nhánh alt: Thanh toán Thành công]</text>
+
+  <path d="M 910 615 L 515 615" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#seqSuccessArr)" />
+  <text x="710" y="610" font-size="9" fill="#15803D" text-anchor="middle">12. 200 OK { status: "SUCCESS", txNo: "TXN_789456" }</text>
+
+  <path d="M 510 635 L 705 635" stroke="#16A34A" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="630" font-size="9" fill="#15803D" text-anchor="middle">13. INSERT payment (status='SUCCESS') &amp; UPDATE order.status = 'PAID'</text>
+
+  <path d="M 510 660 L 315 660" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#seqSuccessArr)" />
+  <text x="410" y="655" font-size="9.5" fill="#15803D" text-anchor="middle">14. 200 OK { success: true, paymentStatus: "SUCCESS", orderStatus: "PAID" }</text>
+
+  <path d="M 310 675 C 340 675, 340 688, 310 688" fill="none" stroke="#10B981" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="350" y="684" font-size="8.5" fill="#047857">Dọn sạch giỏ hàng: clearCart()</text>
+
+  <path d="M 310 710 L 115 710" stroke="#16A34A" stroke-width="1.5" marker-end="url(#seqSuccessArr)" />
+  <text x="210" y="705" font-size="9.5" fill="#15803D" text-anchor="middle">15. Điều hướng sang màn hình Xác nhận &amp; Theo dõi đơn hàng</text>
+
+  <!-- Branch FAILURE inside Alt -->
+  <rect x="250" y="745" width="720" height="145" rx="4" fill="#FEF2F2" stroke="#FCA5A5" />
+  <text x="260" y="762" font-size="9.5" font-weight="bold" fill="#B91C1C">[Nhánh alt: Thanh toán Thất bại (Số dư không đủ / Thẻ từ chối)]</text>
+
+  <path d="M 910 780 L 515 780" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#seqErrArr)" />
+  <text x="710" y="775" font-size="9" fill="#DC2626" text-anchor="middle">16. 400 Bad Request { status: "FAILED", message: "Số dư không đủ" }</text>
+
+  <path d="M 510 805 L 705 805" stroke="#DC2626" stroke-width="1.5" marker-end="url(#seqArr)" />
+  <text x="610" y="800" font-size="9" fill="#B91C1C" text-anchor="middle">17. INSERT payment (status='FAILED') [Order giữ nguyên PENDING_PAYMENT]</text>
+
+  <path d="M 510 830 L 315 830" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#seqErrArr)" />
+  <text x="410" y="825" font-size="9.5" fill="#DC2626" text-anchor="middle">18. 400 Bad Request { success: false, message: "Thanh toán thất bại" }</text>
+
+  <path d="M 310 855 L 115 855" stroke="#DC2626" stroke-width="1.5" marker-end="url(#seqErrArr)" />
+  <text x="210" y="850" font-size="9.5" fill="#DC2626" text-anchor="middle">19. Báo lỗi thanh toán &amp; Hiển thị nút "Thử lại thanh toán"</text>
+</svg>

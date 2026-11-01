@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 820" width="100%" height="100%" style="background:#ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="clsShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2.5" flood-opacity="0.1" />
+    </filter>
+    <marker id="clsArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#1E293B" />
+    </marker>
+    <marker id="diamondComp" viewBox="0 0 12 12" refX="1" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <polygon points="1,6 6,1 11,6 6,11" fill="#1E293B" stroke="#1E293B" />
+    </marker>
+  </defs>
+
+  <!-- Title Header -->
+  <rect x="20" y="15" width="1140" height="42" rx="8" fill="#1E293B" />
+  <text x="590" y="42" fill="#FFFFFF" font-size="16" font-weight="bold" text-anchor="middle">DOMAIN CLASS DIAGRAM (Task 2.3 - I-11 / TV3)</text>
+
+  <!-- Top Enums Container -->
+  <rect x="20" y="70" width="1140" height="75" rx="8" fill="#F8FAFC" stroke="#E2E8F0" />
+  
+  <!-- Enum 1: UserRole -->
+  <rect x="35" y="80" width="160" height="55" rx="6" fill="#EFF6FF" stroke="#3B82F6" />
+  <text x="115" y="96" font-size="10" font-weight="bold" fill="#1E3A8A" text-anchor="middle">&lt;&lt;enum&gt;&gt; UserRole</text>
+  <line x1="35" y1="102" x2="195" y2="102" stroke="#BFDBFE" />
+  <text x="45" y="117" font-size="9" fill="#1E40AF">+ CUSTOMER | STAFF</text>
+
+  <!-- Enum 2: OrderStatus -->
+  <rect x="210" y="80" width="300" height="55" rx="6" fill="#EFF6FF" stroke="#3B82F6" />
+  <text x="360" y="96" font-size="10" font-weight="bold" fill="#1E3A8A" text-anchor="middle">&lt;&lt;enum&gt;&gt; OrderStatus</text>
+  <line x1="210" y1="102" x2="510" y2="102" stroke="#BFDBFE" />
+  <text x="218" y="117" font-size="8.5" fill="#1E40AF">+ PENDING_PAYMENT | PAID | PREPARING | READY | COMPLETED | CANCELLED</text>
+
+  <!-- Enum 3: PaymentMethod -->
+  <rect x="525" y="80" width="170" height="55" rx="6" fill="#EFF6FF" stroke="#3B82F6" />
+  <text x="610" y="96" font-size="10" font-weight="bold" fill="#1E3A8A" text-anchor="middle">&lt;&lt;enum&gt;&gt; PaymentMethod</text>
+  <line x1="525" y1="102" x2="695" y2="102" stroke="#BFDBFE" />
+  <text x="535" y="117" font-size="9" fill="#1E40AF">+ E-WALLET | CARD</text>
+
+  <!-- Enum 4: PaymentStatus -->
+  <rect x="710" y="80" width="190" height="55" rx="6" fill="#EFF6FF" stroke="#3B82F6" />
+  <text x="805" y="96" font-size="10" font-weight="bold" fill="#1E3A8A" text-anchor="middle">&lt;&lt;enum&gt;&gt; PaymentStatus</text>
+  <line x1="710" y1="102" x2="900" y2="102" stroke="#BFDBFE" />
+  <text x="720" y="117" font-size="9" fill="#1E40AF">+ PENDING | SUCCESS | FAILED</text>
+
+  <!-- Enum 5: ProductCategory -->
+  <rect x="915" y="80" width="230" height="55" rx="6" fill="#EFF6FF" stroke="#3B82F6" />
+  <text x="1030" y="96" font-size="10" font-weight="bold" fill="#1E3A8A" text-anchor="middle">&lt;&lt;enum&gt;&gt; ProductCategory</text>
+  <line x1="915" y1="102" x2="1145" y2="102" stroke="#BFDBFE" />
+  <text x="925" y="117" font-size="9" fill="#1E40AF">+ COFFEE | TEA | SIGNATURE</text>
+
+  <!-- Row 1: Core User, Order, Payment -->
+  <!-- Class: User -->
+  <rect x="35" y="170" width="220" height="200" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="35" y="170" width="220" height="28" rx="6" fill="#DBEAFE" />
+  <text x="145" y="189" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">User</text>
+  <line x1="35" y1="198" x2="255" y2="198" stroke="#93C5FD" />
+  <text x="45" y="214" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="45" y="228" font-size="9.5" fill="#1E293B">+ email: String [Unique]</text>
+  <text x="45" y="242" font-size="9.5" fill="#1E293B">+ passwordHash: String</text>
+  <text x="45" y="256" font-size="9.5" fill="#1E293B">+ fullName: String</text>
+  <text x="45" y="270" font-size="9.5" fill="#1E293B">+ phone: String</text>
+  <text x="45" y="284" font-size="9.5" fill="#1E293B">+ role: UserRole</text>
+  <text x="45" y="298" font-size="9.5" fill="#1E293B">+ loyaltyPoints: Integer</text>
+  <text x="45" y="312" font-size="9.5" fill="#1E293B">+ createdAt: DateTime</text>
+  <line x1="35" y1="324" x2="255" y2="324" stroke="#93C5FD" />
+  <text x="45" y="342" font-size="9.5" fill="#2563EB">+ verifyPassword(plain): Boolean</text>
+
+  <!-- Class: Order -->
+  <rect x="330" y="170" width="240" height="200" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="330" y="170" width="240" height="28" rx="6" fill="#DBEAFE" />
+  <text x="450" y="189" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">Order</text>
+  <line x1="330" y1="198" x2="570" y2="198" stroke="#93C5FD" />
+  <text x="340" y="214" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="340" y="228" font-size="9.5" fill="#1E293B">+ orderCode: String [Unique]</text>
+  <text x="340" y="242" font-size="9.5" fill="#1E293B">+ userId: UUID [FK]</text>
+  <text x="340" y="256" font-size="9.5" fill="#1E293B">+ totalAmount: Decimal(10,2)</text>
+  <text x="340" y="270" font-size="9.5" fill="#1E293B">+ status: OrderStatus</text>
+  <text x="340" y="284" font-size="9.5" fill="#1E293B">+ note: String</text>
+  <text x="340" y="298" font-size="9.5" fill="#1E293B">+ createdAt: DateTime</text>
+  <text x="340" y="312" font-size="9.5" fill="#1E293B">+ updatedAt: DateTime</text>
+  <line x1="330" y1="324" x2="570" y2="324" stroke="#93C5FD" />
+  <text x="340" y="342" font-size="9.5" fill="#2563EB">+ canTransitionTo(status): Boolean</text>
+
+  <!-- Class: Payment -->
+  <rect x="640" y="170" width="240" height="200" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="640" y="170" width="240" height="28" rx="6" fill="#DBEAFE" />
+  <text x="760" y="189" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">Payment</text>
+  <line x1="640" y1="198" x2="880" y2="198" stroke="#93C5FD" />
+  <text x="650" y="214" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="650" y="228" font-size="9.5" fill="#1E293B">+ orderId: UUID [FK]</text>
+  <text x="650" y="242" font-size="9.5" fill="#1E293B">+ amount: Decimal(10,2)</text>
+  <text x="650" y="256" font-size="9.5" fill="#1E293B">+ method: PaymentMethod</text>
+  <text x="650" y="270" font-size="9.5" fill="#1E293B">+ status: PaymentStatus</text>
+  <text x="650" y="284" font-size="9.5" fill="#1E293B">+ idempotencyKey: String [Unique]</text>
+  <text x="650" y="298" font-size="9.5" fill="#1E293B">+ transactionCode: String</text>
+  <text x="650" y="312" font-size="9.5" fill="#1E293B">+ failureReason: String</text>
+  <text x="650" y="326" font-size="9.5" fill="#1E293B">+ createdAt: DateTime</text>
+
+  <!-- Class: Promotion (Could - TV2) -->
+  <rect x="940" y="170" width="205" height="180" rx="6" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="940" y="170" width="205" height="28" rx="6" fill="#D1FAE5" />
+  <text x="1042" y="189" font-size="12" font-weight="bold" fill="#065F46" text-anchor="middle">Promotion (Could)</text>
+  <line x1="940" y1="198" x2="1145" y2="198" stroke="#A7F3D0" />
+  <text x="950" y="214" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="950" y="228" font-size="9.5" fill="#1E293B">+ code: String [Unique]</text>
+  <text x="950" y="242" font-size="9.5" fill="#1E293B">+ discountPercent: Integer</text>
+  <text x="950" y="256" font-size="9.5" fill="#1E293B">+ maxDiscountAmount: Decimal</text>
+  <text x="950" y="270" font-size="9.5" fill="#1E293B">+ minOrderAmount: Decimal</text>
+  <text x="950" y="284" font-size="9.5" fill="#1E293B">+ isActive: Boolean</text>
+  <text x="950" y="298" font-size="9.5" fill="#1E293B">+ expiresAt: DateTime</text>
+  <line x1="940" y1="308" x2="1145" y2="308" stroke="#A7F3D0" />
+  <text x="950" y="324" font-size="9" fill="#047857">+ calculateDiscount(): Decimal</text>
+
+  <!-- Row 2: Items, Catalog, Loyalty -->
+  <!-- Class: OrderItem -->
+  <rect x="330" y="420" width="240" height="175" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="330" y="420" width="240" height="28" rx="6" fill="#DBEAFE" />
+  <text x="450" y="439" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">OrderItem</text>
+  <line x1="330" y1="448" x2="570" y2="448" stroke="#93C5FD" />
+  <text x="340" y="464" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="340" y="478" font-size="9.5" fill="#1E293B">+ orderId: UUID [FK]</text>
+  <text x="340" y="492" font-size="9.5" fill="#1E293B">+ productId: UUID [FK]</text>
+  <text x="340" y="506" font-size="9.5" fill="#1E293B">+ productName: String</text>
+  <text x="340" y="520" font-size="9.5" fill="#1E293B">+ sizeCode: String</text>
+  <text x="340" y="534" font-size="9.5" fill="#1E293B">+ unitPrice: Decimal</text>
+  <text x="340" y="548" font-size="9.5" fill="#1E293B">+ quantity: Integer</text>
+  <text x="340" y="562" font-size="9.5" fill="#1E293B">+ subtotal: Decimal</text>
+
+  <!-- Class: OrderItemTopping -->
+  <rect x="330" y="640" width="240" height="140" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="330" y="640" width="240" height="28" rx="6" fill="#DBEAFE" />
+  <text x="450" y="659" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">OrderItemTopping</text>
+  <line x1="330" y1="668" x2="570" y2="668" stroke="#93C5FD" />
+  <text x="340" y="684" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="340" y="698" font-size="9.5" fill="#1E293B">+ orderItemId: UUID [FK]</text>
+  <text x="340" y="712" font-size="9.5" fill="#1E293B">+ toppingId: UUID [FK]</text>
+  <text x="340" y="726" font-size="9.5" fill="#1E293B">+ toppingName: String</text>
+  <text x="340" y="740" font-size="9.5" fill="#1E293B">+ price: Decimal</text>
+
+  <!-- Class: Product -->
+  <rect x="640" y="420" width="240" height="190" rx="6" fill="#FFFFFF" stroke="#D97706" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="640" y="420" width="240" height="28" rx="6" fill="#FEF3C7" />
+  <text x="760" y="439" font-size="12" font-weight="bold" fill="#92400E" text-anchor="middle">Product</text>
+  <line x1="640" y1="448" x2="880" y2="448" stroke="#FDE68A" />
+  <text x="650" y="464" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="650" y="478" font-size="9.5" fill="#1E293B">+ name: String</text>
+  <text x="650" y="492" font-size="9.5" fill="#1E293B">+ category: ProductCategory</text>
+  <text x="650" y="506" font-size="9.5" fill="#1E293B">+ basePrice: Decimal</text>
+  <text x="650" y="520" font-size="9.5" fill="#1E293B">+ isAvailable: Boolean</text>
+  <text x="650" y="534" font-size="9.5" fill="#1E293B">+ stock: Integer</text>
+  <text x="650" y="548" font-size="9.5" fill="#1E293B">+ imageUrl: String</text>
+  <line x1="640" y1="560" x2="880" y2="560" stroke="#FDE68A" />
+  <text x="650" y="578" font-size="9.5" fill="#B45309">+ checkAvailability(qty): Boolean</text>
+
+  <!-- Class: Size -->
+  <rect x="940" y="420" width="205" height="135" rx="6" fill="#FFFFFF" stroke="#D97706" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="940" y="420" width="205" height="28" rx="6" fill="#FEF3C7" />
+  <text x="1042" y="439" font-size="12" font-weight="bold" fill="#92400E" text-anchor="middle">Size</text>
+  <line x1="940" y1="448" x2="1145" y2="448" stroke="#FDE68A" />
+  <text x="950" y="464" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="950" y="478" font-size="9.5" fill="#1E293B">+ productId: UUID [FK]</text>
+  <text x="950" y="492" font-size="9.5" fill="#1E293B">+ code: String (S, M, L)</text>
+  <text x="950" y="506" font-size="9.5" fill="#1E293B">+ name: String</text>
+  <text x="950" y="520" font-size="9.5" fill="#1E293B">+ extraPrice: Decimal</text>
+
+  <!-- Class: Topping -->
+  <rect x="940" y="590" width="205" height="135" rx="6" fill="#FFFFFF" stroke="#D97706" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="940" y="590" width="205" height="28" rx="6" fill="#FEF3C7" />
+  <text x="1042" y="609" font-size="12" font-weight="bold" fill="#92400E" text-anchor="middle">Topping</text>
+  <line x1="940" y1="618" x2="1145" y2="618" stroke="#FDE68A" />
+  <text x="950" y="634" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="950" y="648" font-size="9.5" fill="#1E293B">+ name: String</text>
+  <text x="950" y="662" font-size="9.5" fill="#1E293B">+ price: Decimal</text>
+  <text x="950" y="676" font-size="9.5" fill="#1E293B">+ isAvailable: Boolean</text>
+
+  <!-- Class: LoyaltyTransaction -->
+  <rect x="35" y="420" width="220" height="150" rx="6" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" filter="url(#clsShadow)" />
+  <rect x="35" y="420" width="220" height="28" rx="6" fill="#D1FAE5" />
+  <text x="145" y="439" font-size="12" font-weight="bold" fill="#065F46" text-anchor="middle">LoyaltyTransaction (Could)</text>
+  <line x1="35" y1="448" x2="255" y2="448" stroke="#A7F3D0" />
+  <text x="45" y="464" font-size="9.5" fill="#1E293B">+ id: UUID [PK]</text>
+  <text x="45" y="478" font-size="9.5" fill="#1E293B">+ userId: UUID [FK]</text>
+  <text x="45" y="492" font-size="9.5" fill="#1E293B">+ orderId: UUID [FK]</text>
+  <text x="45" y="506" font-size="9.5" fill="#1E293B">+ pointsChanged: Integer</text>
+  <text x="45" y="520" font-size="9.5" fill="#1E293B">+ type: String</text>
+  <text x="45" y="534" font-size="9.5" fill="#1E293B">+ createdAt: DateTime</text>
+
+  <!-- Connectors with Multiplicities -->
+  <!-- User to Order (1 -> 0..*) -->
+  <path d="M 255 250 L 330 250" stroke="#1E293B" stroke-width="1.5" marker-end="url(#clsArr)" />
+  <text x="265" y="242" font-size="10" font-weight="bold">1</text>
+  <text x="305" y="242" font-size="10" font-weight="bold">0..*</text>
+
+  <!-- Order to Payment (1 -> 0..*) -->
+  <path d="M 570 250 L 640 250" stroke="#1E293B" stroke-width="1.5" marker-end="url(#clsArr)" />
+  <text x="580" y="242" font-size="10" font-weight="bold">1</text>
+  <text x="615" y="242" font-size="10" font-weight="bold">0..*</text>
+
+  <!-- Order to Promotion (0..1 -> 0..1) -->
+  <path d="M 570 200 L 940 200" stroke="#059669" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#clsArr)" />
+  <text x="585" y="193" font-size="9" fill="#047857">0..1</text>
+  <text x="915" y="193" font-size="9" fill="#047857">0..1</text>
+
+  <!-- Order to OrderItem (Composition 1 -> 1..*) -->
+  <path d="M 450 370 L 450 420" stroke="#1E293B" stroke-width="1.5" marker-start="url(#diamondComp)" />
+  <text x="458" y="388" font-size="10" font-weight="bold">1</text>
+  <text x="458" y="412" font-size="10" font-weight="bold">1..*</text>
+
+  <!-- OrderItem to OrderItemTopping (Composition 1 -> 0..*) -->
+  <path d="M 450 595 L 450 640" stroke="#1E293B" stroke-width="1.5" marker-start="url(#diamondComp)" />
+  <text x="458" y="612" font-size="10" font-weight="bold">1</text>
+  <text x="458" y="632" font-size="10" font-weight="bold">0..*</text>
+
+  <!-- Product to Size (Composition 1 -> 1..*) -->
+  <path d="M 880 480 L 940 480" stroke="#1E293B" stroke-width="1.5" marker-start="url(#diamondComp)" />
+  <text x="890" y="472" font-size="10" font-weight="bold">1</text>
+  <text x="918" y="472" font-size="10" font-weight="bold">1..*</text>
+
+  <!-- Product to Topping (Association) -->
+  <path d="M 880 540 L 910 540 L 910 650 L 940 650" stroke="#1E293B" stroke-width="1.2" />
+  <text x="890" y="535" font-size="9">0..*</text>
+  <text x="918" y="645" font-size="9">0..*</text>
+
+  <!-- User to LoyaltyTransaction (1 -> 0..*) -->
+  <path d="M 145 370 L 145 420" stroke="#059669" stroke-width="1.5" marker-end="url(#clsArr)" />
+  <text x="155" y="390" font-size="10" font-weight="bold">1</text>
+  <text x="155" y="412" font-size="10" font-weight="bold">0..*</text>
+</svg>
