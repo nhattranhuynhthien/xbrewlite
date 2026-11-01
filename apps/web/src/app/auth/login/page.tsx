@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Coffee, Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/menu';
@@ -133,5 +133,13 @@ export default function LoginPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-center text-xs text-slate-400">Đang tải...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
