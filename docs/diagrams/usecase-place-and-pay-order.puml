@@ -1,0 +1,41 @@
+@startuml usecase-place-and-pay-order
+' BrewLite - Detailed Scope Use-Case Diagram: Place & Pay Order
+' Author: TV4 (Backend - Order & Payment)
+' Reviewer: TV1 (Tech Lead / DevOps)
+' Task 1.3: D-09 (Refs #9)
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam roundcorner 10
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+actor "Khách hàng (Customer)" as Customer
+actor "Payment Mock Service" as PaymentGW
+actor "Cơ sở dữ liệu (PostgreSQL)" as DB
+
+rectangle "Phạm vi Use-case Trọng tâm: Đặt & Thanh toán Đơn hàng" {
+  usecase "UC-06: Đặt hàng (Tạo đơn)" as UC_Order #DBEAFE
+  usecase "UC-07: Thanh toán đơn hàng" as UC_Pay #DBEAFE
+  usecase "UC-08: Kiểm tra & Trừ tồn kho" as UC_Stock
+  usecase "UC-09: Xử lý Idempotency-Key" as UC_Idempotency
+  usecase "UC-10: Tính giá chuẩn phía Server" as UC_ServerPrice
+  usecase "UC-11: Rollback khi hết hàng" as UC_Rollback
+  usecase "UC-12: Thử lại thanh toán khi lỗi" as UC_RetryPay
+}
+
+Customer --> UC_Order : 1. Xác nhận giỏ hàng & Đặt
+Customer --> UC_Pay : 2. Chọn Ví/Thẻ & Thanh toán
+
+UC_Order ..> UC_ServerPrice : <<include>>
+UC_Order ..> UC_Stock : <<include>> (trong Transaction)
+UC_Stock ..> UC_Rollback : <<extend>> (khi stock < qty)
+
+UC_Pay ..> UC_Idempotency : <<include>>
+UC_Pay ..> UC_RetryPay : <<extend>> (khi Payment FAILED)
+
+UC_Stock --> DB : Execute atomic update
+UC_Pay --> PaymentGW : Gửi yêu cầu trừ tiền mô phỏng
+
+@enduml

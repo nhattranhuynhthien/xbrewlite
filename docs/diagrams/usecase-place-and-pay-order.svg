@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" width="100%" height="100%" style="background:#ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2.5" flood-opacity="0.12" />
+    </filter>
+    <linearGradient id="titleGrad2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1E40AF" />
+      <stop offset="1%" stop-color="#3B82F6" />
+    </linearGradient>
+    <marker id="arr2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#1E3A8A" />
+    </marker>
+    <marker id="arrDash2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#6366F1" />
+    </marker>
+  </defs>
+
+  <!-- Banner -->
+  <rect x="20" y="15" width="820" height="42" rx="8" fill="url(#titleGrad2)" />
+  <text x="430" y="42" fill="#FFFFFF" font-size="16" font-weight="bold" text-anchor="middle">SƠ ĐỒ PHẠM VI USE-CASE TRỌNG TÂM: ĐẶT VÀ THANH TOÁN (Task 1.3 - I-09)</text>
+
+  <!-- Actor: Customer -->
+  <g id="actor-cust">
+    <circle cx="70" cy="220" r="18" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2" />
+    <line x1="70" y1="238" x2="70" y2="280" stroke="#1D4ED8" stroke-width="2" />
+    <line x1="45" y1="255" x2="95" y2="255" stroke="#1D4ED8" stroke-width="2" />
+    <line x1="70" y1="280" x2="50" y2="315" stroke="#1D4ED8" stroke-width="2" />
+    <line x1="70" y1="280" x2="90" y2="315" stroke="#1D4ED8" stroke-width="2" />
+    <text x="70" y="335" font-size="12" font-weight="bold" fill="#0F172A" text-anchor="middle">Khách hàng</text>
+    <text x="70" y="350" font-size="10.5" fill="#64748B" text-anchor="middle">(Customer)</text>
+  </g>
+
+  <!-- System boundary -->
+  <rect x="170" y="75" width="490" height="420" rx="10" fill="#F8FAFC" stroke="#2563EB" stroke-width="2" />
+  <rect x="185" y="65" width="310" height="22" rx="4" fill="#2563EB" />
+  <text x="340" y="80" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">Phạm vi: Luồng Đặt &amp; Thanh toán Đơn hàng</text>
+
+  <!-- UC-06 -->
+  <ellipse cx="280" cy="140" rx="90" ry="22" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2" />
+  <text x="280" y="144" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">UC-06: Đặt hàng (Tạo đơn)</text>
+
+  <!-- UC-10: Server price -->
+  <ellipse cx="530" cy="115" rx="105" ry="18" fill="#F1F5F9" stroke="#64748B" stroke-width="1.5" />
+  <text x="530" y="119" font-size="10.5" fill="#1E293B" text-anchor="middle">UC-10: Tính giá chuẩn Server</text>
+
+  <!-- UC-08: Check stock -->
+  <ellipse cx="530" cy="170" rx="105" ry="18" fill="#F1F5F9" stroke="#64748B" stroke-width="1.5" />
+  <text x="530" y="174" font-size="10.5" fill="#1E293B" text-anchor="middle">UC-08: Kiểm tra &amp; Trừ tồn kho</text>
+
+  <!-- UC-11: Rollback -->
+  <ellipse cx="530" cy="225" rx="105" ry="18" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5" />
+  <text x="530" y="229" font-size="10.5" font-weight="bold" fill="#991B1B" text-anchor="middle">UC-11: Rollback khi hết hàng</text>
+
+  <!-- UC-07: Pay order -->
+  <ellipse cx="280" cy="340" rx="90" ry="22" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2" />
+  <text x="280" y="344" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">UC-07: Thanh toán đơn hàng</text>
+
+  <!-- UC-09: Idempotency -->
+  <ellipse cx="530" cy="320" rx="105" ry="18" fill="#F1F5F9" stroke="#64748B" stroke-width="1.5" />
+  <text x="530" y="324" font-size="10.5" fill="#1E293B" text-anchor="middle">UC-09: Xử lý Idempotency-Key</text>
+
+  <!-- UC-12: Retry -->
+  <ellipse cx="530" cy="375" rx="105" ry="18" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="530" y="379" font-size="10.5" font-weight="bold" fill="#B45309" text-anchor="middle">UC-12: Thử lại khi lỗi thanh toán</text>
+
+  <!-- Actor: DB -->
+  <g id="actor-db">
+    <rect x="700" y="145" width="130" height="50" rx="6" fill="#F0FDF4" stroke="#16A34A" stroke-width="2" />
+    <text x="765" y="167" font-size="11" font-weight="bold" fill="#166534" text-anchor="middle">PostgreSQL DB</text>
+    <text x="765" y="182" font-size="9.5" fill="#15803D" text-anchor="middle">(Transaction / ACID)</text>
+  </g>
+
+  <!-- Actor: Payment GW -->
+  <g id="actor-gw">
+    <rect x="700" y="320" width="130" height="50" rx="6" fill="#F0FDF4" stroke="#16A34A" stroke-width="2" />
+    <text x="765" y="342" font-size="11" font-weight="bold" fill="#166534" text-anchor="middle">Payment Mock</text>
+    <text x="765" y="357" font-size="9.5" fill="#15803D" text-anchor="middle">(Ví / Thẻ Gateway)</text>
+  </g>
+
+  <!-- Connectors -->
+  <path d="M 105 240 L 195 145" stroke="#1D4ED8" stroke-width="2" marker-end="url(#arr2)" />
+  <path d="M 105 260 L 195 335" stroke="#1D4ED8" stroke-width="2" marker-end="url(#arr2)" />
+
+  <path d="M 370 135 L 425 120" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrDash2)" />
+  <text x="390" y="120" font-size="9" fill="#4338CA">&lt;&lt;include&gt;&gt;</text>
+
+  <path d="M 370 145 L 425 165" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrDash2)" />
+  <text x="390" y="170" font-size="9" fill="#4338CA">&lt;&lt;include&gt;&gt;</text>
+
+  <path d="M 530 188 L 530 207" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrDash2)" />
+  <text x="560" y="202" font-size="9" fill="#DC2626">&lt;&lt;extend&gt;&gt;</text>
+
+  <path d="M 370 335 L 425 325" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrDash2)" />
+  <text x="390" y="325" font-size="9" fill="#4338CA">&lt;&lt;include&gt;&gt;</text>
+
+  <path d="M 370 348 L 425 370" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrDash2)" />
+  <text x="390" y="375" font-size="9" fill="#B45309">&lt;&lt;extend&gt;&gt;</text>
+
+  <path d="M 635 170 L 700 170" stroke="#16A34A" stroke-width="1.8" marker-end="url(#arr2)" />
+  <path d="M 635 340 L 700 340" stroke="#16A34A" stroke-width="1.8" marker-end="url(#arr2)" />
+</svg>

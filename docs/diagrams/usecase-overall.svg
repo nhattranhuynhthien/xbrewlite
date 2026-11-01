@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 640" width="100%" height="100%" style="background:#ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.15" />
+    </filter>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="1%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="ucGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="1%" stop-color="#EEF2F6" />
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#4B5563" />
+    </marker>
+    <marker id="arrowDash" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#6366F1" />
+    </marker>
+  </defs>
+
+  <!-- Title & Banner -->
+  <rect x="20" y="15" width="880" height="48" rx="8" fill="url(#headerGrad)" />
+  <text x="460" y="45" fill="#FFFFFF" font-size="18" font-weight="bold" text-anchor="middle">SƠ ĐỒ USE-CASE TỔNG QUÁT HỆ THỐNG BREWLITE (Task 1.2 - I-07)</text>
+
+  <!-- System Boundary -->
+  <rect x="180" y="80" width="540" height="530" rx="12" fill="#FAFAFA" stroke="#3B82F6" stroke-width="2" stroke-dasharray="6,4" />
+  <rect x="200" y="68" width="280" height="24" rx="4" fill="#3B82F6" />
+  <text x="340" y="84" fill="#FFFFFF" font-size="12" font-weight="bold" text-anchor="middle">Hệ Thống Đặt Hàng BrewLite (PWA)</text>
+
+  <!-- Actor: Customer -->
+  <g id="actor-customer">
+    <circle cx="80" cy="270" r="18" fill="#E0E7FF" stroke="#4F46E5" stroke-width="2" />
+    <line x1="80" y1="288" x2="80" y2="330" stroke="#4F46E5" stroke-width="2" />
+    <line x1="55" y1="305" x2="105" y2="305" stroke="#4F46E5" stroke-width="2" />
+    <line x1="80" y1="330" x2="60" y2="365" stroke="#4F46E5" stroke-width="2" />
+    <line x1="80" y1="330" x2="100" y2="365" stroke="#4F46E5" stroke-width="2" />
+    <text x="80" y="385" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">Khách hàng</text>
+    <text x="80" y="400" font-size="11" fill="#64748B" text-anchor="middle">(Customer)</text>
+  </g>
+
+  <!-- Actor: Staff -->
+  <g id="actor-staff">
+    <circle cx="820" cy="200" r="18" fill="#FEF3C7" stroke="#D97706" stroke-width="2" />
+    <line x1="820" y1="218" x2="820" y2="260" stroke="#D97706" stroke-width="2" />
+    <line x1="795" y1="235" x2="845" y2="235" stroke="#D97706" stroke-width="2" />
+    <line x1="820" y1="260" x2="800" y2="295" stroke="#D97706" stroke-width="2" />
+    <line x1="820" y1="260" x2="840" y2="295" stroke="#D97706" stroke-width="2" />
+    <text x="820" y="315" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">Nhân viên quầy</text>
+    <text x="820" y="330" font-size="11" fill="#64748B" text-anchor="middle">(Staff)</text>
+  </g>
+
+  <!-- Actor: Payment Gateway -->
+  <g id="actor-payment">
+    <rect x="760" y="430" width="120" height="55" rx="8" fill="#ECFDF5" stroke="#10B981" stroke-width="2" />
+    <text x="820" y="453" font-size="12" font-weight="bold" fill="#065F46" text-anchor="middle">Payment Mock</text>
+    <text x="820" y="470" font-size="10" fill="#047857" text-anchor="middle">(Ví / Thẻ Gateway)</text>
+  </g>
+
+  <!-- Group: Auth -->
+  <rect x="200" y="105" width="230" height="100" rx="8" fill="#F1F5F9" stroke="#CBD5E1" />
+  <text x="210" y="122" font-size="11" font-weight="bold" fill="#475569">Phân hệ Xác thực &amp; Người dùng</text>
+
+  <!-- UC-01 -->
+  <ellipse cx="315" cy="145" rx="90" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="315" y="149" font-size="11" fill="#0F172A" text-anchor="middle">UC-01: Đăng ký tài khoản</text>
+
+  <!-- UC-02 -->
+  <ellipse cx="315" cy="185" rx="90" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="315" y="189" font-size="11" fill="#0F172A" text-anchor="middle">UC-02: Đăng nhập &amp; Nhận JWT</text>
+
+  <!-- Group: Catalog & Cart -->
+  <rect x="460" y="105" width="240" height="150" rx="8" fill="#F1F5F9" stroke="#CBD5E1" />
+  <text x="470" y="122" font-size="11" font-weight="bold" fill="#475569">Phân hệ Danh mục &amp; Giỏ hàng</text>
+
+  <!-- UC-03 -->
+  <ellipse cx="580" cy="145" rx="95" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="580" y="149" font-size="11" fill="#0F172A" text-anchor="middle">UC-03: Xem danh mục món (Menu)</text>
+
+  <!-- UC-04 -->
+  <ellipse cx="580" cy="185" rx="95" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="580" y="189" font-size="11" fill="#0F172A" text-anchor="middle">UC-04: Xem chi tiết &amp; Tùy chọn</text>
+
+  <!-- UC-05 -->
+  <ellipse cx="580" cy="225" rx="95" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="580" y="229" font-size="11" fill="#0F172A" text-anchor="middle">UC-05: Quản lý giỏ hàng (Cart)</text>
+
+  <!-- Group: Orders & Payment (Trọng tâm) -->
+  <rect x="200" y="270" width="500" height="210" rx="8" fill="#EFF6FF" stroke="#93C5FD" />
+  <text x="210" y="290" font-size="11" font-weight="bold" fill="#1E40AF">Phân hệ Đặt hàng &amp; Thanh toán (Trọng tâm)</text>
+
+  <!-- UC-06 -->
+  <ellipse cx="320" cy="330" rx="100" ry="20" fill="#DBEAFE" stroke="#2563EB" stroke-width="2" />
+  <text x="320" y="334" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">UC-06: Đặt hàng (Tạo đơn)</text>
+
+  <!-- UC-07 -->
+  <ellipse cx="320" cy="420" rx="100" ry="20" fill="#DBEAFE" stroke="#2563EB" stroke-width="2" />
+  <text x="320" y="424" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">UC-07: Thanh toán đơn hàng</text>
+
+  <!-- UC-08 -->
+  <ellipse cx="570" cy="330" rx="95" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="570" y="334" font-size="11" fill="#0F172A" text-anchor="middle">UC-08: Kiểm tra tồn kho</text>
+
+  <!-- UC-09 -->
+  <ellipse cx="570" cy="420" rx="95" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="570" y="424" font-size="11" fill="#0F172A" text-anchor="middle">UC-09: Xử lý Idempotency</text>
+
+  <!-- Group: Tracking & History -->
+  <rect x="200" y="495" width="500" height="100" rx="8" fill="#F1F5F9" stroke="#CBD5E1" />
+  <text x="210" y="512" font-size="11" font-weight="bold" fill="#475569">Phân hệ Lịch sử &amp; Quản lý đơn</text>
+
+  <!-- UC-10 -->
+  <ellipse cx="320" cy="540" rx="95" ry="18" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="320" y="544" font-size="11" fill="#0F172A" text-anchor="middle">UC-10: Theo dõi trạng thái đơn</text>
+
+  <!-- UC-11 -->
+  <ellipse cx="320" cy="575" rx="95" ry="16" fill="url(#ucGrad)" stroke="#64748B" stroke-width="1.5" />
+  <text x="320" y="579" font-size="10.5" fill="#0F172A" text-anchor="middle">UC-11: Xem lịch sử đơn cá nhân</text>
+
+  <!-- UC-12 -->
+  <ellipse cx="570" cy="550" rx="100" ry="20" fill="#FEF3C7" stroke="#D97706" stroke-width="1.8" />
+  <text x="570" y="554" font-size="11" font-weight="bold" fill="#92400E" text-anchor="middle">UC-12: Cập nhật trạng thái đơn</text>
+
+  <!-- Connectors from Customer -->
+  <path d="M 115 285 L 225 148" stroke="#6B7280" stroke-width="1.2" />
+  <path d="M 115 295 L 225 185" stroke="#6B7280" stroke-width="1.2" />
+  <path d="M 115 310 L 485 148" stroke="#6B7280" stroke-width="1.2" />
+  <path d="M 115 315 L 485 188" stroke="#6B7280" stroke-width="1.2" />
+  <path d="M 115 325 L 485 228" stroke="#6B7280" stroke-width="1.2" />
+  <path d="M 115 335 L 220 330" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 115 350 L 220 420" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 115 365 L 225 540" stroke="#6B7280" stroke-width="1.2" />
+  <path d="M 115 375 L 225 575" stroke="#6B7280" stroke-width="1.2" />
+
+  <!-- Connectors from Staff -->
+  <path d="M 785 240 L 405 185" stroke="#D97706" stroke-width="1.5" />
+  <path d="M 785 255 L 675 150" stroke="#D97706" stroke-width="1.5" />
+  <path d="M 785 270 L 670 545" stroke="#D97706" stroke-width="1.8" marker-end="url(#arrow)" />
+
+  <!-- Connectors to Payment Gateway -->
+  <path d="M 420 425 L 760 455" stroke="#059669" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow)" />
+
+  <!-- Include relationships -->
+  <path d="M 420 330 L 475 330" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowDash)" />
+  <text x="447" y="324" font-size="9" fill="#4F46E5" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+
+  <path d="M 420 420 L 475 420" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowDash)" />
+  <text x="447" y="414" font-size="9" fill="#4F46E5" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+</svg>

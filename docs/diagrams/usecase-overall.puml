@@ -1,0 +1,70 @@
+@startuml usecase-overall
+' BrewLite - Overall System Use-Case Diagram
+' Author: TV2 (Backend - Auth & User)
+' Reviewer: TV3 (Đỗ Hoàng Vinh)
+' Task 1.2: D-08 (Refs #7)
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam roundcorner 10
+skinparam shadowing false
+skinparam handwritten false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+actor "Khách hàng\n(Customer)" as Customer
+actor "Nhân viên quầy / Pha chế\n(Staff)" as Staff
+actor "Hệ thống Cổng thanh toán\n(Payment Mock)" as PaymentGW
+
+rectangle "Hệ Thống Đặt Hàng BrewLite (Mobile-first PWA)" {
+  
+  package "Xác thực & Người dùng" {
+    usecase "UC-01: Đăng ký tài khoản" as UC_Register
+    usecase "UC-02: Đăng nhập & Nhận JWT" as UC_Login
+  }
+
+  package "Danh mục & Giỏ hàng" {
+    usecase "UC-03: Xem danh mục món (Menu)" as UC_ViewMenu
+    usecase "UC-04: Xem chi tiết món & Tùy chọn" as UC_ViewDetail
+    usecase "UC-05: Quản lý giỏ hàng (Cart)" as UC_ManageCart
+  }
+
+  package "Đặt hàng & Thanh toán (Trọng tâm)" {
+    usecase "UC-06: Đặt hàng (Tạo đơn)" as UC_CreateOrder
+    usecase "UC-07: Thanh toán đơn hàng" as UC_PayOrder
+    usecase "UC-08: Kiểm tra tồn kho" as UC_CheckStock
+    usecase "UC-09: Xử lý Idempotency-Key" as UC_Idempotency
+  }
+
+  package "Theo dõi & Quản lý đơn" {
+    usecase "UC-10: Theo dõi trạng thái đơn" as UC_TrackOrder
+    usecase "UC-11: Xem lịch sử đơn cá nhân" as UC_OrderHistory
+    usecase "UC-12: Cập nhật trạng thái đơn" as UC_UpdateStatus
+  }
+}
+
+' Quan hệ của Customer
+Customer --> UC_Register
+Customer --> UC_Login
+Customer --> UC_ViewMenu
+Customer --> UC_ViewDetail
+Customer --> UC_ManageCart
+Customer --> UC_CreateOrder
+Customer --> UC_PayOrder
+Customer --> UC_TrackOrder
+Customer --> UC_OrderHistory
+
+' Quan hệ của Staff
+Staff --> UC_Login
+Staff --> UC_UpdateStatus
+Staff --> UC_ViewMenu
+
+' Include / Extend Relationships
+UC_CreateOrder ..> UC_CheckStock : <<include>>
+UC_CreateOrder ..> UC_ManageCart : <<include>>
+UC_PayOrder ..> UC_Idempotency : <<include>>
+
+' Payment Gateway integration
+UC_PayOrder -- PaymentGW : <<interact>>
+
+@enduml
