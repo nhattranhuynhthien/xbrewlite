@@ -1,0 +1,22 @@
+{
+  "name": "BrewLite Coffee & Tea",
+  "short_name": "BrewLite",
+  "description": "Hệ thống đặt đồ uống tự phục vụ thông minh Mobile-first PWA",
+  "start_url": "/menu",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d9488",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
