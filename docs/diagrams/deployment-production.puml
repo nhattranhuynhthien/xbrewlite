@@ -1,0 +1,78 @@
+@startuml deployment-production
+' BrewLite - UML Deployment Diagram for Production Environment
+' Author: TV1 (Tech Lead / DevOps)
+' Reviewer: TV2 (Backend - Auth & User)
+' Task 3.2: D-20 (Refs #8)
+
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundcorner 6
+skinparam shadowing false
+
+node "Thiết bị Người dùng (User Mobile Device)" as ClientDevice {
+  artifact "Mobile Browser / PWA Shell\n(Chrome, Safari, Edge)" as PWA
+}
+
+cloud "Môi trường CI / GitHub Actions" as CI_Env {
+  node "GitHub Actions Runner" as Runner {
+    artifact "Quality Gate: Lint & Tests" as Gate
+    artifact "Docker Build & Push" as DockerBuild
+  }
+  folder "Secrets Vault (GitHub Secrets)" as CISecrets {
+    file "REGISTRY_TOKEN, PROD_DEPLOY_KEY"
+  }
+}
+
+cloud "Docker Hub / GitHub Container Registry (GHCR)" as Registry {
+  artifact "brewlite-web:sha-xxxx" as WebImg
+  artifact "brewlite-api:sha-xxxx" as ApiImg
+}
+
+cloud "Môi trường Production (Cloud Platform - Railway / Render / VPS)" as Prod_Env {
+  
+  node "Edge Gateway / Reverse Proxy (Traefik / NGINX)" as Proxy {
+    component "SSL/TLS Terminator\n(Port 443 HTTPS)" as SSL
+  }
+
+  node "Next.js Web Service (Container)" as WebNode {
+    component "Node.js 20 LTS Runtime" as WebRuntime
+    artifact "apps/web (Next.js PWA App)" as WebApp
+    port "Port 3000" as WebPort
+  }
+
+  node "NestJS API Service (Container)" as ApiNode {
+    component "Node.js 20 LTS Runtime" as ApiRuntime
+    artifact "apps/api (NestJS Server)" as ApiApp
+    port "Port 3001" as ApiPort
+    component "GET /api/v1/health\n(Health Monitor)" as HealthCheck
+    component "Structured Logger\n(Stdout Stream)" as SysLog
+  }
+
+  node "Database Server (Private Isolated Network)" as DBNode {
+    database "PostgreSQL 16 Engine" as PgEngine {
+      port "Port 5432 (Internal Only)" as DBPort
+    }
+    storage "Persistent Volume Mount\n(/var/lib/postgresql/data)" as PgVol
+  }
+
+  folder "Production Environment Variables & Secrets" as ProdSecrets {
+    file "DB_PASSWORD, JWT_SECRET, CORS_ORIGIN"
+  }
+}
+
+' External Connections
+PWA --> SSL : 1. HTTPS Requests (Port 443)\nhttps://app.brewlite.example.com
+SSL --> WebPort : 2. Reverse Proxy HTTP (Port 3000)
+PWA --> SSL : 3. API Requests\nhttps://api.brewlite.example.com/api/v1
+SSL --> ApiPort : 4. Reverse Proxy HTTP (Port 3001)
+
+' Internal Private Network
+ApiApp --> DBPort : 5. TCP Database Connection\n(Private Bridge Network - No Public Access)
+PgEngine --> PgVol : 6. Read/Write Data Blocks
+
+' CI/CD Pipeline Flow
+Runner ..> Registry : Push Tagged Images
+Registry ..> Prod_Env : Pull Images on Deployment Trigger
+ApiNode ..> ProdSecrets : Injects Secrets at Runtime
+
+@enduml
